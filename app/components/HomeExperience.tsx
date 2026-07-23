@@ -377,7 +377,16 @@ export function HomeExperience() {
 
       <section className="final-cta"><div><p className="eyebrow">Ready when you are</p><h2>Make your next gold decision with clarity.</h2><p>Check the indicative rate, calculate an estimate or book a branch appointment.</p></div><div><a href="#rates" className="button button-gold">Check Today’s Rate</a><a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="button button-glass">WhatsApp Us</a></div></section>
 
-      <footer className="site-footer"><div className="footer-grid"><div><Link href="/" className="brand"><BrandIdentity /></Link><p>Transparent gold evaluation and customer-first branch service in Bengaluru.</p>{SOCIAL_LINKS.length > 0 && <div className="social-links" aria-label="Social media">{SOCIAL_LINKS.map((link) => <a key={link.label} href={link.href} target="_blank" rel="noreferrer">{link.label}</a>)}</div>}</div><div><h3>Explore</h3><a href="#rates">Gold Rates</a><a href="#calculator">Calculator</a><a href="#appointment">Appointment</a><Link href="/blog">Gold Guides</Link></div><div><h3>Contact</h3><a href={`tel:${PRIMARY_PHONE}`}>{PRIMARY_PHONE_DISPLAY}</a><span>{SECONDARY_PHONE_DISPLAY}</span><a href={`mailto:${COMPANY_EMAIL}`}>{COMPANY_EMAIL}</a><a href={GOOGLE_MAPS_URL} target="_blank" rel="noreferrer">{PRIMARY_BRANCH}, Bengaluru</a></div><div><h3>Legal & Access</h3><Link href="/privacy">Privacy Policy</Link><Link href="/terms">Terms & Disclaimer</Link><Link href="/login">Login</Link><button onClick={installApp}>Install PWA</button></div></div><div className="footer-bottom"><span>© {new Date().getFullYear()} {SITE_NAME}. All rights reserved.</span><span>Rates are indicative. Final value follows physical testing.</span></div></footer>
+      <footer className="site-footer"><div className="footer-grid"><div><Link href="/" className="brand"><BrandIdentity /></Link><p>Transparent gold evaluation and customer-first branch service in Bengaluru.</p>{SOCIAL_LINKS.length > 0 && <div className="social-links" aria-label="Social media">{SOCIAL_LINKS.map((link) => <a key={link.label} href={link.href} target="_blank" rel="noreferrer">{link.label}</a>)}</div>}</div><div><h3>Explore</h3><a href="#rates">Gold Rates</a><a href="#calculator">Calculator</a><a href="#appointment">Appointment</a><Link href="/blog">Gold Guides</Link></div><div><h3>Contact</h3><a href={`tel:${PRIMARY_PHONE}`}>{PRIMARY_PHONE_DISPLAY}</a><span>{SECONDARY_PHONE_DISPLAY}</span><a href={`mailto:${COMPANY_EMAIL}`}>{COMPANY_EMAIL}</a><a href={GOOGLE_MAPS_URL} target="_blank" rel="noreferrer">{PRIMARY_BRANCH}, Bengaluru</a></div><div><h3>Legal & Access</h3><Link href="/privacy">Privacy Policy</Link><Link href="/terms">Terms & Disclaimer</Link><Link href="/login">Login</Link><button onClick={installApp}>Install PWA</button></div></div><div className="footer-bottom"><span>© {new Date().getFullYear()} {SITE_NAME}. All rights reserved.</span><span>Rates are indicative. Final value follows physical testing.</span><p>
+    Designed & Developed by{" "}
+    <a
+      href="https://www.linkedin.com/in/sai-kumar-kundla"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      SmartDEX
+    </a>
+  </p></div></footer>
 
       <div className="mobile-cta"><a href={`tel:${PRIMARY_PHONE}`}><Icon name="phone" /> Call</a><a href={WHATSAPP_URL} target="_blank" rel="noreferrer">WhatsApp</a><a href="#rates"><Icon name="chart" /> Rates</a></div>
       {toast && <div className="toast" role="status"><Icon name="check" /><span>{toast}</span></div>}
