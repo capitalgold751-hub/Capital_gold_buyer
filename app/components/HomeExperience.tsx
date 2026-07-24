@@ -29,6 +29,15 @@ function trackClientEvent(eventName: string) {
   const params = new URLSearchParams(window.location.search);
   fetch("/api/analytics", { method:"POST", headers:{"content-type":"application/json"}, body:JSON.stringify({ eventName, sessionId, pagePath:window.location.pathname, referrerHost:document.referrer ? new URL(document.referrer).hostname : "direct", campaign:params.get("utm_source")||"organic" }), keepalive:true }).catch(()=>undefined);
 }
+function gtag_report_conversion() {
+  if (typeof window !== "undefined" && (window as any).gtag) {
+    (window as any).gtag("event", "conversion", {
+      send_to: "AW-18340024414/7rRoCN23xNQcEN6gmqlE",
+      value: 1.0,
+      currency: "INR",
+    });
+  }
+}
 
 function Icon({ name }: { name: "shield" | "pin" | "lock" | "chart" | "calculator" | "calendar" | "phone" | "arrow" | "menu" | "close" | "check" | "spark" }) {
   const paths: Record<string, React.ReactNode> = {
@@ -192,6 +201,7 @@ export function HomeExperience() {
       if (!response.ok) throw new Error(data.error || "Unable to show the estimate.");
       setEstimateResult(Number(data.estimatedValue));
       trackClientEvent("estimate_unlocked");
+      gtag_report_conversion();
       setToast(data.message || "Estimate unlocked and added to the admin follow-up queue.");
     } catch (error) {
       setEstimateResult(null);
@@ -403,7 +413,7 @@ function AppointmentSection({ setToast }: { setToast: (message: string) => void 
     try {
       const response = await fetch("/api/appointments", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(Object.fromEntries(form.entries())) });
       const data = await response.json(); if (!response.ok) throw new Error(data.error || "Unable to book appointment.");
-      event.currentTarget.reset(); trackClientEvent("appointment_requested"); setToast(data.message);
+      event.currentTarget.reset(); trackClientEvent("appointment_requested"); gtag_report_conversion(); setToast(data.message);
     } catch (e) { setError(e instanceof Error ? e.message : "Please try again."); } finally { setLoading(false); }
   }
   return <section className="section appointment-section reveal" id="appointment"><div className="appointment-copy"><p className="eyebrow">Skip the waiting</p><h2>Book a preferred <span>evaluation time</span></h2><p>Your request enters the protected admin queue first. An admin assigns one staff owner, who can confirm and update the visit.</p><div className="appointment-benefits"><div><Icon name="calendar"/><span><strong>Choose your time</strong><small>Four convenient daily slots</small></span></div><div><Icon name="shield"/><span><strong>Assigned follow-up</strong><small>One accountable owner from request to completion</small></span></div></div><div className="appointment-visual"><img src="/images/appointment-consultation.webp" width={1000} height={667} loading="lazy" decoding="async" alt="Customer confirming a professional gold evaluation appointment with staff" /><span><Icon name="calendar" /> A calmer, planned branch visit</span></div></div><form className="glass-card appointment-form" onSubmit={submit}><div className="form-grid"><label>Full name<input name="name" autoComplete="name" required /></label><label>Mobile number<input name="phone" inputMode="tel" autoComplete="tel" required /></label><label>Email (optional)<input name="email" type="email" autoComplete="email" /></label><label>Branch<select name="branch" defaultValue={PRIMARY_BRANCH}><option>{PRIMARY_BRANCH}</option></select></label><label>Date<input name="appointmentDate" type="date" required /></label><label>Time<select name="timeSlot" required defaultValue=""><option value="" disabled>Select a time</option><option>10:00 AM</option><option>12:00 PM</option><option>3:00 PM</option><option>5:00 PM</option></select></label></div><label>Anything our team should know? <textarea name="note" rows={3} /></label><input name="company" className="honeypot" tabIndex={-1} autoComplete="off"/><label className="consent-row"><input type="checkbox" name="consent" value="true" defaultChecked required/><span>I agree to be contacted about this appointment.</span></label>{error && <p className="form-error" role="alert">{error}</p>}<button className="button button-gold full-width" disabled={loading}>{loading && <LoadingSpinner />}{loading ? "Sending request…" : "Request Appointment"}{!loading && <Icon name="arrow"/>}</button></form></section>;
@@ -411,6 +421,6 @@ function AppointmentSection({ setToast }: { setToast: (message: string) => void 
 
 function ContactSection({ setToast }: { setToast: (message: string) => void }) {
   const [loading, setLoading] = useState(false); const [error, setError] = useState("");
-  async function submit(event: FormEvent<HTMLFormElement>) { event.preventDefault(); setLoading(true); setError(""); const form = new FormData(event.currentTarget); try { const body: Record<string, FormDataEntryValue | boolean> = Object.fromEntries(form.entries()); body.consent = form.get("consent") === "true"; const response = await fetch("/api/contact", { method:"POST", headers:{"content-type":"application/json"}, body:JSON.stringify(body) }); const data = await response.json(); if(!response.ok) throw new Error(data.error || "Unable to send enquiry."); event.currentTarget.reset(); trackClientEvent("contact_submitted"); setToast(data.message); } catch(e){ setError(e instanceof Error ? e.message : "Please try again."); } finally { setLoading(false); } }
+  async function submit(event: FormEvent<HTMLFormElement>) { event.preventDefault(); setLoading(true); setError(""); const form = new FormData(event.currentTarget); try { const body: Record<string, FormDataEntryValue | boolean> = Object.fromEntries(form.entries()); body.consent = form.get("consent") === "true"; const response = await fetch("/api/contact", { method:"POST", headers:{"content-type":"application/json"}, body:JSON.stringify(body) }); const data = await response.json(); if(!response.ok) throw new Error(data.error || "Unable to send enquiry."); event.currentTarget.reset(); trackClientEvent("contact_submitted"); gtag_report_conversion(); setToast(data.message); } catch(e){ setError(e instanceof Error ? e.message : "Please try again."); } finally { setLoading(false); } }
   return <section className="section contact-section reveal" id="contact"><div><p className="eyebrow">Talk to the team</p><h2>Have a question before your visit?</h2><p>Share your enquiry and it will appear in the central lead dashboard for follow-up.</p><a href={`tel:${PRIMARY_PHONE}`} className="contact-phone"><Icon name="phone"/><span><small>Call us</small><strong>{PRIMARY_PHONE_DISPLAY}</strong></span></a></div><form className="glass-card contact-form" onSubmit={submit}><div className="form-grid"><label>Name<input name="name" required autoComplete="name"/></label><label>Phone<input name="phone" required inputMode="tel" autoComplete="tel"/></label><label className="full-span">Email (optional)<input name="email" type="email" autoComplete="email"/></label></div><label>Your enquiry<textarea name="message" rows={4} required/></label><input name="company" className="honeypot" tabIndex={-1} autoComplete="off"/><label className="consent-row"><input type="checkbox" name="consent" value="true" defaultChecked required/><span>I agree to be contacted about my enquiry.</span></label>{error && <p className="form-error" role="alert">{error}</p>}<button className="button button-gold full-width" disabled={loading}>{loading && <LoadingSpinner />}{loading ? "Sending…" : "Send Enquiry"}{!loading && <Icon name="arrow"/>}</button></form></section>;
 }
