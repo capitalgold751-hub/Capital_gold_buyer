@@ -32,13 +32,12 @@ function trackClientEvent(eventName: string) {
 function gtag_report_conversion() {
   if (typeof window !== "undefined" && (window as any).gtag) {
     (window as any).gtag("event", "conversion", {
-      send_to: "AW-18340024414/7rRoCN23xNQcEN6gmqlE",
+      send_to: "AW-18340024414/L9pXCJ6By9UcEN6gmqlE",
       value: 1.0,
       currency: "INR",
     });
   }
 }
-
 function Icon({ name }: { name: "shield" | "pin" | "lock" | "chart" | "calculator" | "calendar" | "phone" | "arrow" | "menu" | "close" | "check" | "spark" }) {
   const paths: Record<string, React.ReactNode> = {
     shield: <><path d="M12 3 5 6v5c0 4.7 2.8 8 7 10 4.2-2 7-5.3 7-10V6l-7-3Z"/><path d="m9.5 12 1.7 1.7 3.8-4"/></>,
